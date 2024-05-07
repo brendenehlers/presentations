@@ -24,9 +24,9 @@ transition: slide-left
 mdc: true
 ---
 
-# Why you shouldn't use else statements
+# Why you shouldn't use else statements...
 
-most of the time.
+<v-click>...most of the time.</v-click>
 
 <!-- Who Am I? page -->
 ---
@@ -34,15 +34,8 @@ layout: intro
 ---
 # Who am I?
 
-- Full stack developer with an backend focus
-- Blogger
-
----
----
-
-# What do I have against `else` statements?
-
-Else statements are a symptom of bad code.
+- Full stack developer
+- Open source enthusiast
 
 <!-- Messy example -->
 ---
@@ -50,12 +43,12 @@ src: pages/messy-example.md
 ---
 
 ---
-layout: quote
+layout: fact
 ---
 
 # Guard Clauses
 
-Guard clauses are checks on variables that will end the function execution when the check fails.
+<p>Guard clauses are checks on variables that will end the function execution when the check fails.</p>
 
 
 <!-- Guard clause example -->
@@ -64,12 +57,135 @@ src: pages/guard-example.md
 ---
 
 ---
+layout: section
 ---
-# Some cool advantages
+# I'm not convinced
 
-- Contract
-- Cleaner diffs
-- Core logic is easy to find
+<v-click>
+  <p>Let's talk about the advantages</p>
+</v-click>
+
+---
+---
+
+# Functions are easier to understand
+<div grid="~ cols-2 gap-2" m="t-2">
+<p>Old Code</p>
+
+<p>New Code</p>
+
+```ts {all|5|all}
+function createUser(db: Database, user: User) {
+  if (user != null) {
+    if (db.isConnected()) {
+      if (!db.hasEntry(user.email)) {
+        return db.create(user)
+      } else {
+        throw new Error("user already exists")
+      }
+    } else {
+      throw new Error("database not connected")
+    }
+  } else {
+    throw new Error("user is undefined")
+  }
+}
+```
+
+
+```ts {all|14|all}
+function createUser(db: Database, user: User) {
+  if (user == null) {
+    throw new Error("user is undefined")
+  }
+
+  if (!db.isConnected()) {
+    throw new Error("database not connected")
+  }
+
+  if (db.hasEntry(user.email)) {
+    throw new Error("user already exists")
+  }
+
+  return db.create(user)
+}
+```
+
+</div>
+
+<p>Where is the core logic in each function?</p>
+
+---
+---
+# Makes the function requirements transparent
+
+```ts {all|2-4|6-8|10-12|all}
+function createUser(db: Database, user: User) {
+  if (user == null) {
+    throw new Error("user is undefined")
+  }
+
+  if (!db.isConnected()) {
+    throw new Error("database not connected")
+  }
+
+  if (db.hasEntry(user.email)) {
+    throw new Error("user already exists")
+  }
+
+  return db.create(user)
+}
+```
+<v-click>
+  <p>Establishes a "contract" for this function.</p>
+</v-click>
+
+---
+---
+# Cleaner diffs
+
+<p>Let's compare the what the diffs would look like</p>
+
+````md magic-move
+```diff
+ // without the guard clauses 
+ function createUser(db: Database, user: User) {
+   if (user != null) {
+     if (db.isConnected()) {
+-      return db.create(user) 
++      if (!db.hasEntry(user.email)) {
++        return db.create(user)
++      } else {
++        throw new Error("user already exists")
++      }
+     } else {
+       throw new Error("database not connected")
+     }
+   } else {
+     throw new Error("user is undefined")
+   }
+ }
+```
+
+```diff
+ // with the guard clauses
+ function createUser(db: Database, user: User) {
+   if (user == null) {
+     throw new Error("user is undefined")
+   }
+ 
+   if (!db.isConnected()) {
+     throw new Error("database not connected")
+   }
+
++  if (db.hasEntry(user.email)) {
++    throw new Error("user already exists")
++  }
+
+   return db.create(user)
+ }
+```
+````
 
 ---
 ---
@@ -85,7 +201,11 @@ I wrote a blog post on this topic, check it out if you're interested.
 
 <!-- Add QR code to the post -->
 
-dev.to/behlers
+<a href="https://dev.to/behlers"> dev.to/behlers</a>
+
+<a href="https://x.com/brendenehlers"><carbon-LogoX /> @brendenehlers</a>
+
+<a href="https://www.linkedin.com/in/brendenehlers"><carbon-LogoLinkedin /> Brenden Ehlers</a>
 
 ---
 layout: end

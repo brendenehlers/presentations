@@ -1,19 +1,31 @@
 # Let's do an example
 
+Adding a new user to a database
+
 <!-- Lets say you want to create a user in a database -->
 <!-- How would you go about creating that function? -->
 
-Lets say you need to create a function to add a new user to the database
-
-<v-click>
-
 ````md magic-move
 ```ts
-function createUser(user: User): DatabaseData {
-  if (db.isConnected()) {
+function createUser(db: Database, user: User) {
+
+}
+```
+
+<!-- Let's start with our core logic -->
+
+```ts
+function createUser(db: Database, user: User) {
+  return db.create(user)
+}
+```
+
+```ts
+function createUser(db: Database, user: User) {
+  if (user != null) {
     return db.create(user)
   } else {
-    throw new Error("database not connected")
+    throw new Error("user is undefined")
   }
 }
 ```
@@ -21,7 +33,7 @@ function createUser(user: User): DatabaseData {
 <!-- That would work, but now lets check that the user isn't undefined -->
 
 ```ts
-function createUser(user: User): DatabaseData {
+function createUser(db: Database, user: User) {
   if (user != null) {
     if (db.isConnected()) {
       return db.create(user)
@@ -37,7 +49,7 @@ function createUser(user: User): DatabaseData {
 <!-- And what if we want to make sure the user's email is unique -->
 
 ```ts
-function createUser(user: User): DatabaseData {
+function createUser(db: Database, user: User) {
   if (user != null) {
     if (db.isConnected()) {
       if (!db.hasEntry(user.email)) {
@@ -56,10 +68,8 @@ function createUser(user: User): DatabaseData {
 
 ````
 
-</v-click>
-
 <br />
 
 <v-click>
-  Messy, right?
+  <p>What a mess!</p>
 </v-click>
